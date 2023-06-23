@@ -1,0 +1,323 @@
+version 3
+run General-0-20220831-17:25:23-97580
+attr configname General
+attr datetime 20220831-17:25:23
+attr datetimef 20220831-172523
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsd ""
+attr iterationvarsf ""
+attr measurement ""
+attr network TcpAppExample
+attr processid 97580
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+config debug-on-errors true
+config image-path ../../../images
+config network TcpAppExample
+config *.*.numApps 1
+config *.client.app[0].typename TcpClientApp
+config *.client.app[0].io.connectAddress "\"server\""
+config *.client.app[0].io.connectPort 1000
+config *.client.app[0].source.productionInterval "uniform(0s, 20s)"
+config *.client.app[0].source.packetLength "intuniform(100B, 200B)"
+config *.client.app[0].source.packetData "intuniform(0, 1)"
+config *.server.app[0].typename TcpServerApp
+config *.server.app[0].listener.localPort 1000
+
+vector 0 TcpAppExample.client.ppp[0].ppp transmissionState:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source transmissionStateChanged
+attr title "tx state"
+vector 1 TcpAppExample.client.udp passedUpPk:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetSentToUpper
+attr title "packets passed up, count"
+vector 2 TcpAppExample.client.udp droppedPkWrongPort:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsNoPortFound(packetDropped)
+attr title "packets dropped (wrong port), count"
+vector 3 TcpAppExample.client.udp droppedPkBadChecksum:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsIncorrectlyReceived(packetDropped)
+attr title "packets dropped (checksum error), count"
+vector 4 TcpAppExample.server.ppp[0].ppp transmissionState:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source transmissionStateChanged
+attr title "tx state"
+vector 5 TcpAppExample.server.udp passedUpPk:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetSentToUpper
+attr title "packets passed up, count"
+vector 6 TcpAppExample.server.udp droppedPkWrongPort:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsNoPortFound(packetDropped)
+attr title "packets dropped (wrong port), count"
+vector 7 TcpAppExample.server.udp droppedPkBadChecksum:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsIncorrectlyReceived(packetDropped)
+attr title "packets dropped (checksum error), count"
+vector 8 TcpAppExample.client.app[0].source packetLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushed)
+attr title "packet lengths"
+attr unit b
+vector 9 TcpAppExample.client.tcp.conn-3 tcpRcvQueueBytes:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 10 TcpAppExample.client.tcp.conn-3 rcvAdv:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 11 TcpAppExample.client.tcp.conn-3 rcvWnd:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 12 TcpAppExample.client.tcp.conn-3 sndAck:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 13 TcpAppExample.client.ppp[0].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 14 TcpAppExample.client.ppp[0].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 15 TcpAppExample.client.ppp[0].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 16 TcpAppExample.client.ppp[0].ppp txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 17 TcpAppExample.client.ppp[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 18 TcpAppExample.client.ppp[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 19 TcpAppExample.server.ppp[0].ppp rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 20 TcpAppExample.server.ppp[0].ppp passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 21 TcpAppExample.server.tcp.conn-0 rcvSeq:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 22 TcpAppExample.server.tcp.conn-0 rcvAck:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 23 TcpAppExample.server.tcp.conn-0 tcpRcvPayloadBytes:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 24 TcpAppExample.server.tcp.conn-4 rcvAdv:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 25 TcpAppExample.server.tcp.conn-4 sndWnd:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 26 TcpAppExample.server.tcp.conn-4 tcpRcvQueueBytes:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 27 TcpAppExample.server.tcp.conn-4 rcvWnd:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 28 TcpAppExample.server.tcp.conn-4 sndAck:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 29 TcpAppExample.server.ppp[0].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 30 TcpAppExample.server.ppp[0].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 31 TcpAppExample.server.ppp[0].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 32 TcpAppExample.server.ppp[0].ppp txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 33 TcpAppExample.server.ppp[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 34 TcpAppExample.server.ppp[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 35 TcpAppExample.client.ppp[0].ppp rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 36 TcpAppExample.client.ppp[0].ppp passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 37 TcpAppExample.client.tcp.conn-3 rcvSeq:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 38 TcpAppExample.client.tcp.conn-3 rcvAck:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 39 TcpAppExample.client.tcp.conn-3 tcpRcvPayloadBytes:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 40 TcpAppExample.client.tcp.conn-3 sndWnd:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 41 TcpAppExample.client.tcp.conn-3 sndNxt:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 42 TcpAppExample.client.tcp.conn-3 unacked:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 43 TcpAppExample.server.tcp.conn-4 rcvSeq:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 44 TcpAppExample.server.tcp.conn-4 rcvAck:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 45 TcpAppExample.server.tcp.conn-4 tcpRcvPayloadBytes:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 46 TcpAppExample.server.tcp.conn-4 unacked:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 47 TcpAppExample.server.tcp.conn-4 cwnd:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 48 TcpAppExample.server.tcp.conn-4 ssthresh:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+vector 49 TcpAppExample.server.tcp.conn-4 dupAcks:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+0	0	0	0
+0	6	0	1
+0	7	0.0000408	0
+0	19	0.0000818	1
+0	20	0.000237	0
+1	0	0	0
+2	0	0	0
+3	0	0	0
+4	0	0	0
+4	12	0.0000409	1
+4	13	0.0000817	0
+5	0	0	0
+6	0	0	0
+7	0	0	0
+8	0	0	1176
+9	3	0	0
+9	16	0.0000818	0
+10	3	0	7504
+10	16	0.0000818	7515
+10	16	0.0000818	7515
+11	3	0	7504
+11	16	0.0000818	7504
+12	3	0	0
+12	16	0.0000818	11
+13	6	0	352
+13	19	0.0000818	1496
+14	6	0	0
+14	19	0.0000818	0
+15	6	0	352
+15	19	0.0000818	1496
+16	6	0	51
+16	19	0.0000818	194
+17	6	0	0
+17	19	0.0000818	0
+18	6	0	0
+18	19	0.0000818	0
+19	8	0.0000409	51
+19	21	0.0002371	194
+20	8	0.0000409	44
+20	21	0.0002371	187
+21	10	0.0000409	0
+22	10	0.0000409	0
+23	10	0.0000409	0
+24	10	0.0000409	7505
+24	10	0.0000409	7505
+24	23	0.0002371	7505
+25	10	0.0000409	7504
+25	23	0.0002371	7504
+26	10	0.0000409	0
+26	23	0.0002371	0
+26	23	0.0002371	147
+27	10	0.0000409	7504
+27	23	0.0002371	7357
+28	10	0.0000409	1
+28	23	0.0002371	148
+29	12	0.0000409	352
+30	12	0.0000409	0
+31	12	0.0000409	352
+32	12	0.0000409	51
+33	12	0.0000409	0
+34	12	0.0000409	0
+35	14	0.0000818	51
+36	14	0.0000818	44
+37	16	0.0000818	10
+38	16	0.0000818	1
+39	16	0.0000818	0
+40	16	0.0000818	7504
+41	16	0.0000818	1
+42	16	0.0000818	147
+43	23	0.0002371	1
+44	23	0.0002371	11
+45	23	0.0002371	147
+46	23	0.0002371	0
+47	23	0.0002371	1072
+48	23	0.0002371	4294967295
+49	23	0.0002371	0
+
