@@ -158,7 +158,6 @@ void TcpSessionApp::socketEstablished(TcpSocket *socket)
 void TcpSessionApp::socketDataArrived(TcpSocket *socket, Packet *msg, bool urgent)
 {
     TcpAppBase::socketDataArrived(socket, msg, urgent);
-    std::cout << "\n Session app received something!" << endl;
 }
 
 void TcpSessionApp::socketClosed(TcpSocket *socket)

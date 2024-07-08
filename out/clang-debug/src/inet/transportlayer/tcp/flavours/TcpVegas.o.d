@@ -4,6 +4,7 @@
   /Users/av288/omnetpp-6.0/include/omnetpp.h \
   inet/transportlayer/tcp/flavours/TcpVegas.cc \
   inet/transportlayer/tcp/flavours/TcpVegas.h \
+  inet/transportlayer/tcp/flavours/TcpTahoeRenoFamily.h \
   inet/transportlayer/tcp/flavours/TcpBaseAlg.h \
   inet/transportlayer/tcp/TcpAlgorithm.h \
   inet/transportlayer/tcp/TcpConnection.h \
@@ -65,9 +66,8 @@
   inet/transportlayer/contract/TransportHeaderBase_m.h \
   inet/transportlayer/tcp/TcpConnectionState_m.h \
   inet/transportlayer/tcp/flavours/TcpBaseAlgState_m.h \
-  inet/transportlayer/tcp/flavours/TcpVegasState_m.h \
-  inet/transportlayer/tcp/flavours/TcpSegmentTransmitInfoList_m.h \
-  inet/transportlayer/tcp/flavours/TcpSegmentTransmitInfoList.h
+  inet/transportlayer/tcp/flavours/TcpTahoeRenoFamilyState_m.h \
+  inet/transportlayer/tcp/flavours/TcpVegasState_m.h
 
 /Users/av288/omnetpp-6.0/samples/inet4.4/src/inet/common/precompiled.h:
 
@@ -76,6 +76,8 @@
 inet/transportlayer/tcp/flavours/TcpVegas.cc:
 
 inet/transportlayer/tcp/flavours/TcpVegas.h:
+
+inet/transportlayer/tcp/flavours/TcpTahoeRenoFamily.h:
 
 inet/transportlayer/tcp/flavours/TcpBaseAlg.h:
 
@@ -243,8 +245,6 @@ inet/transportlayer/tcp/TcpConnectionState_m.h:
 
 inet/transportlayer/tcp/flavours/TcpBaseAlgState_m.h:
 
+inet/transportlayer/tcp/flavours/TcpTahoeRenoFamilyState_m.h:
+
 inet/transportlayer/tcp/flavours/TcpVegasState_m.h:
-
-inet/transportlayer/tcp/flavours/TcpSegmentTransmitInfoList_m.h:
-
-inet/transportlayer/tcp/flavours/TcpSegmentTransmitInfoList.h:

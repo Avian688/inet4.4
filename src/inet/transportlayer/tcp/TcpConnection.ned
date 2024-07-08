@@ -50,7 +50,13 @@ simple TcpConnection {
         @signal[calcLoad];    // will record calcLoad (currently only with DcTcp)
         @signal[markingProb];   // will record marking probability (currently only with DcTcp)
 		
-			    
+		@signal[minRTT];
+		@signal[baseRTT];
+		@signal[targetCwnd];	
+		
+		@statistic[minRTT](record=vector; interpolationmode=sample-hold);
+		@statistic[baseRTT](record=vector; interpolationmode=sample-hold);
+		@statistic[targetCwnd](record=vector; interpolationmode=sample-hold);	    
 			    
 	    @statistic[cwndSeg](record=vector; interpolationmode=sample-hold);
         @statistic[bicK](record=vector; interpolationmode=sample-hold);

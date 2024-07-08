@@ -1253,7 +1253,6 @@ OBJS = \
     $O/inet/transportlayer/tcp/flavours/DcTcpFamily.o \
     $O/inet/transportlayer/tcp/flavours/DumbTcp.o \
     $O/inet/transportlayer/tcp/flavours/TcpBaseAlg.o \
-    $O/inet/transportlayer/tcp/flavours/TcpCubic.o \
     $O/inet/transportlayer/tcp/flavours/TcpNewReno.o \
     $O/inet/transportlayer/tcp/flavours/TcpNoCongestionControl.o \
     $O/inet/transportlayer/tcp/flavours/TcpReno.o \
@@ -1541,7 +1540,6 @@ OBJS = \
     $O/inet/transportlayer/tcp/flavours/DcTcpFamilyState_m.o \
     $O/inet/transportlayer/tcp/flavours/DumbTcpState_m.o \
     $O/inet/transportlayer/tcp/flavours/TcpBaseAlgState_m.o \
-    $O/inet/transportlayer/tcp/flavours/TcpCubicState_m.o \
     $O/inet/transportlayer/tcp/flavours/TcpSegmentTransmitInfoList_m.o \
     $O/inet/transportlayer/tcp/flavours/TcpTahoeRenoFamilyState_m.o \
     $O/inet/transportlayer/tcp/flavours/TcpVegasState_m.o \
@@ -1756,7 +1754,6 @@ MSGFILES = \
     inet/transportlayer/tcp/flavours/DcTcpFamilyState.msg \
     inet/transportlayer/tcp/flavours/DumbTcpState.msg \
     inet/transportlayer/tcp/flavours/TcpBaseAlgState.msg \
-    inet/transportlayer/tcp/flavours/TcpCubicState.msg \
     inet/transportlayer/tcp/flavours/TcpSegmentTransmitInfoList.msg \
     inet/transportlayer/tcp/flavours/TcpTahoeRenoFamilyState.msg \
     inet/transportlayer/tcp/flavours/TcpVegasState.msg \

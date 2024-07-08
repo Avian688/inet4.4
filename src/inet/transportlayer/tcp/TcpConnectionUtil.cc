@@ -775,8 +775,9 @@ uint32_t TcpConnection::sendSegment(uint32_t bytes)
 
     ASSERT(options_len < state->snd_mss);
 
-    if (bytes + options_len > state->snd_mss)
-        bytes = state->snd_mss - options_len;
+    //if (bytes + options_len > state->snd_mss)
+    //    bytes = state->snd_mss - options_len;
+    bytes = state->snd_mss;
 
     uint32_t sentBytes = bytes;
 
@@ -886,8 +887,8 @@ bool TcpConnection::sendData(uint32_t congestionWindow)
     writeHeaderOptions(tmpTcpHeader);
     uint options_len = B(tmpTcpHeader->getHeaderLength() - TCP_MIN_HEADER_LENGTH).get();
     ASSERT(options_len < state->snd_mss);
-    uint32_t effectiveMss = state->snd_mss - options_len;
-
+    //uint32_t effectiveMss = state->snd_mss - options_len;
+    uint32_t effectiveMss = state->snd_mss;
     uint32_t old_snd_nxt = state->snd_nxt;
 
     // start sending 'bytesToSend' bytes

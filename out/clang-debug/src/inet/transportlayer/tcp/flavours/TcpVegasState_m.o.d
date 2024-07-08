@@ -8,8 +8,7 @@
   inet/common/precompiled_debug.h inet/common/precompiled.h \
   inet/opp_defines.h inet/features.h inet/common/Compat.h \
   inet/common/InitStages.h inet/common/InitStageRegistry.h \
-  inet/transportlayer/tcp/flavours/TcpBaseAlgState_m.h \
-  inet/transportlayer/tcp/TcpConnectionState_m.h \
+  inet/transportlayer/tcp/flavours/TcpTahoeRenoFamilyState_m.h \
   inet/transportlayer/tcp_common/TcpHeader_m.h \
   inet/common/packet/chunk/Chunk_m.h inet/common/Units_m.h \
   inet/common/Units.h inet/common/INETMath.h \
@@ -34,6 +33,8 @@
   inet/common/packet/chunk/SliceChunk.h \
   inet/transportlayer/common/CrcMode_m.h \
   inet/transportlayer/contract/TransportHeaderBase_m.h \
+  inet/transportlayer/tcp/flavours/TcpBaseAlgState_m.h \
+  inet/transportlayer/tcp/TcpConnectionState_m.h \
   inet/transportlayer/tcp/TcpAlgorithm.h \
   inet/transportlayer/tcp/TcpConnection.h \
   inet/networklayer/common/L3Address.h \
@@ -64,10 +65,7 @@
   inet/queueing/contract/IPassivePacketSink.h \
   inet/networklayer/contract/NetworkHeaderBase_m.h \
   inet/common/ProtocolTag_m.h inet/common/Protocol_m.h \
-  inet/common/TagBase_m.h inet/transportlayer/tcp_common/TcpHeader.h \
-  inet/transportlayer/tcp/flavours/TcpSegmentTransmitInfoList_m.h \
-  inet/transportlayer/tcp/flavours/TcpSegmentTransmitInfoList.h \
-  inet/transportlayer/tcp/flavours/TcpBaseAlg.h
+  inet/common/TagBase_m.h inet/transportlayer/tcp_common/TcpHeader.h
 
 /Users/av288/omnetpp-6.0/samples/inet4.4/src/inet/common/precompiled.h:
 
@@ -95,9 +93,7 @@ inet/common/InitStages.h:
 
 inet/common/InitStageRegistry.h:
 
-inet/transportlayer/tcp/flavours/TcpBaseAlgState_m.h:
-
-inet/transportlayer/tcp/TcpConnectionState_m.h:
+inet/transportlayer/tcp/flavours/TcpTahoeRenoFamilyState_m.h:
 
 inet/transportlayer/tcp_common/TcpHeader_m.h:
 
@@ -160,6 +156,10 @@ inet/common/packet/chunk/SliceChunk.h:
 inet/transportlayer/common/CrcMode_m.h:
 
 inet/transportlayer/contract/TransportHeaderBase_m.h:
+
+inet/transportlayer/tcp/flavours/TcpBaseAlgState_m.h:
+
+inet/transportlayer/tcp/TcpConnectionState_m.h:
 
 inet/transportlayer/tcp/TcpAlgorithm.h:
 
@@ -240,9 +240,3 @@ inet/common/Protocol_m.h:
 inet/common/TagBase_m.h:
 
 inet/transportlayer/tcp_common/TcpHeader.h:
-
-inet/transportlayer/tcp/flavours/TcpSegmentTransmitInfoList_m.h:
-
-inet/transportlayer/tcp/flavours/TcpSegmentTransmitInfoList.h:
-
-inet/transportlayer/tcp/flavours/TcpBaseAlg.h:

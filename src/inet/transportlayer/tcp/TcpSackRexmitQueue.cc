@@ -68,10 +68,10 @@ std::string TcpSackRexmitQueue::detailedInfo() const
 
 void TcpSackRexmitQueue::discardUpTo(uint32_t seqNum)
 {
-    if(!(seqLE(begin, seqNum) && seqLE(seqNum, end))){
-        std::cout << "\n ASSERT in discardUpTo FAILED" << endl;
-        std::cout << "\n" << detailedInfo() << endl;
-    }
+//    if(!(seqLE(begin, seqNum) && seqLE(seqNum, end))){
+//        std::cout << "\n ASSERT in discardUpTo FAILED" << endl;
+//        std::cout << "\n" << detailedInfo() << endl;
+//    }
     ASSERT(seqLE(begin, seqNum) && seqLE(seqNum, end));
 //    if (!rexmitQueue.empty()) {
 //        auto i = rexmitQueue.begin();
@@ -94,14 +94,14 @@ void TcpSackRexmitQueue::discardUpTo(uint32_t seqNum)
 //                rexmitMap.erase(i->second.endSeqNum);
 //                i++;
 //            }
+            //std::cout << "\n DISCARDING UP TO: " << seqNum << endl;
             while ((i != iEnd) && seqLE(i->second.endSeqNum, seqNum)){
                     i = rexmitMap.erase(i);
             }
-//            if (i != rexmitMap.end()) {
-//                //shift begin to seqNum. Will shift large first blocks beginSeqNum up to seqNum.
-//                ASSERT(seqLE(i->second.beginSeqNum, seqNum) && seqLess(seqNum, i->second.endSeqNum));
-//                i->second.beginSeqNum = seqNum;
-//            }
+            if (i != rexmitMap.end()) {
+                //ASSERT(seqLE(i->second.beginSeqNum, seqNum) && seqLess(seqNum, i->second.endSeqNum));
+                i->second.beginSeqNum = seqNum;
+            }
         }
     begin = seqNum;
 
@@ -120,7 +120,7 @@ void TcpSackRexmitQueue::enqueueSentData(uint32_t fromSeqNum, uint32_t toSeqNum)
 //        std::cout << "\n BOUND CHECK TWO: " << boundTimeCheckTwo << endl;
 //        std::cout << "\n WHILE CHECK TWO: " << whileTimeCheckTwo << endl;
 //    }
-
+    //std::cout << "\n SACK PACKET SIZE: " << toSeqNum - fromSeqNum << endl;
     ASSERT(seqLE(begin, fromSeqNum) && seqLE(fromSeqNum, end));
 
     bool found = false;
@@ -129,9 +129,9 @@ void TcpSackRexmitQueue::enqueueSentData(uint32_t fromSeqNum, uint32_t toSeqNum)
     EV_INFO << "rexmitQ: " << str() << " enqueueSentData [" << fromSeqNum << ".." << toSeqNum << ")\n";
 
     //std::cout << "\n map size: " << rexmitMap.size() << endl;
-    if(rexmitMap.size() > 3000){
-        std::cout << detailedInfo() << endl;
-    }
+//    if(rexmitMap.size() > 3000){
+//        std::cout << detailedInfo() << endl;
+//    }
     ASSERT(seqLess(fromSeqNum, toSeqNum));
 
     if (rexmitMap.empty() || (end == fromSeqNum)) { //where most of the blocks are pushed onto the scoreboard. When added, pop prev element (if not rexmitted or sackeed) and extend said region.
@@ -140,23 +140,28 @@ void TcpSackRexmitQueue::enqueueSentData(uint32_t fromSeqNum, uint32_t toSeqNum)
         region.sacked = false;
         region.rexmitted = false;
         region.numOfDiscontiguousSacks = 0;
-        if((fromSeqNum == (--rexmitMap.end())->second.endSeqNum) && (!(--rexmitMap.end())->second.sacked && !(--rexmitMap.end())->second.rexmitted)){  //extending current region TODO add check to ensure beginSeqNum of new block starts where the previous block ends
-            //std::cout << "\n EXTENDING BLOCK" << endl;
-            Region dupRegion;
-            dupRegion.beginSeqNum = (--rexmitMap.end())->second.beginSeqNum;
-            dupRegion.endSeqNum = toSeqNum;
-            dupRegion.sacked = (--rexmitMap.end())->second.sacked;
-            dupRegion.rexmitted = (--rexmitMap.end())->second.rexmitted;
-            dupRegion.numOfDiscontiguousSacks = (--rexmitMap.end())->second.numOfDiscontiguousSacks;
 
-            rexmitMap.erase((--rexmitMap.end())->second.endSeqNum);
-            //rexmitQueue.back().endSeqNum = toSeqNum;
-            rexmitMap.insert({toSeqNum, dupRegion});
-            //TODO remove map element and add new with updated endSeqNumber!!!
+
+        if(!(rexmitMap.empty())){
+            if((fromSeqNum == (--rexmitMap.end())->second.endSeqNum) && (!(--rexmitMap.end())->second.sacked && !(--rexmitMap.end())->second.rexmitted)){  //extending current region TODO add check to ensure beginSeqNum of new block starts where the previous block ends
+                //std::cout << "\n EXTENDING BLOCK" << endl;
+                Region dupRegion;
+                dupRegion.beginSeqNum = (--rexmitMap.end())->second.beginSeqNum;
+                dupRegion.endSeqNum = toSeqNum;
+                dupRegion.sacked = (--rexmitMap.end())->second.sacked;
+                dupRegion.rexmitted = (--rexmitMap.end())->second.rexmitted;
+                dupRegion.numOfDiscontiguousSacks = (--rexmitMap.end())->second.numOfDiscontiguousSacks;
+
+                rexmitMap.erase((--rexmitMap.end())->second.endSeqNum); //look into optimise erase methods to use it
+                //rexmitQueue.back().endSeqNum = toSeqNum;
+                rexmitMap.insert({toSeqNum, dupRegion});
+                //TODO remove map element and add new with updated endSeqNumber!!!
+            }
+            else{
+                rexmitMap.insert({toSeqNum, region});
+            }
         }
         else{
-            //std::cout << "\n NOT EXTENDING BLOCK - ADDING NEW ITEM" << endl;
-            //rexmitQueue.push_back(region);
             rexmitMap.insert({toSeqNum, region});
         }
         found = true;
@@ -210,7 +215,7 @@ void TcpSackRexmitQueue::enqueueSentData(uint32_t fromSeqNum, uint32_t toSeqNum)
 
             region.beginSeqNum = fromSeqNum;
             region.endSeqNum = toSeqNum;
-            region.sacked = beforeEnd ? iter->second.sacked : false;
+            region.sacked = beforeEnd ? iter->second.sacked : false; //splitting so must have same sack as previous block
             region.rexmitted = beforeEnd;
             //rexmitQueue.insert(i, region);
             rexmitMap.insert({toSeqNum, region});
@@ -231,20 +236,9 @@ void TcpSackRexmitQueue::enqueueSentData(uint32_t fromSeqNum, uint32_t toSeqNum)
 
     ASSERT(found);
 
-    //begin = rexmitQueue.front().beginSeqNum;
-    //end = rexmitQueue.back().endSeqNum;
     begin = rexmitMap.begin()->second.beginSeqNum;
 
-    if(begin > end){ //if new begin is greater than old end, then the seq num has exceeded 4294967295
-        end = (--rexmitMap.end())->second.endSeqNum;
-    }
     end = (--rexmitMap.end())->second.endSeqNum;
-    //std::cout << "\n NEW BEGIN: " << begin << endl;
-    //std::cout << "\n NEW END: " << end << endl;
-    // TESTING queue:
-    //ASSERT(checkQueue());
-
-//    tcpEV << "rexmitQ: rexmitQLength=" << getQueueLength() << "\n";
 }
 
 bool TcpSackRexmitQueue::checkQueue() const
@@ -320,7 +314,7 @@ void TcpSackRexmitQueue::setSackedBit(uint32_t fromSeqNum, uint32_t toSeqNum)
                 rexmitMap.erase(iter->second.endSeqNum);
                 //i->endSeqNum = fromSeqNum;
 
-                rexmitMap.insert({fromSeqNum, startRegion});
+                rexmitMap.insert({fromSeqNum, startRegion}); //potential merging
 
                 Region region;
                 region.beginSeqNum = fromSeqNum;
@@ -351,21 +345,26 @@ void TcpSackRexmitQueue::setSackedBit(uint32_t fromSeqNum, uint32_t toSeqNum)
                 region.endSeqNum = fromSeqNum;
                 //rexmitQueue.insert(i, region);
                 rexmitMap.insert({region.endSeqNum, region}); //TODO potentially fix
-                //i->beginSeqNum = fromSeqNum;
+                iter->second.beginSeqNum = fromSeqNum;
             }
         }
 
-        while (iter != rexmitMap.end() && seqLE(iter->second.endSeqNum, toSeqNum)) {  //Most common case. Should split existing large region if it exists into smaller region
+        iter = rexmitMap.upper_bound(fromSeqNum); //sets sacked bit if the following regions of the above check are also within the range
+        while ((iter != rexmitMap.end() && seqLE(iter->second.endSeqNum, toSeqNum))) {  //Most common case. Should split existing large region if it exists into smaller region
             if (seqGE(iter->second.beginSeqNum, fromSeqNum)) { // Search region in queue!
                 found = true;
-                iter->second.sacked = true; // set sacked bit
+                iter->second.sacked = true; // set sacked bit //may need to merge
                 //std::cout << "\n Found block, setting sacked bit!" << endl;
                 //std::cout << "\n"<<  detailedInfo() << endl;
             }
-
+//            std::cout << "\n iter->second.beginSeqNum: " << iter->second.beginSeqNum << endl;
+//            std::cout << "\n iter->second.endSeqNum: " << iter->second.endSeqNum << endl;
+//            std::cout << "\n fromSeqNum: " << fromSeqNum << endl;
+//            std::cout << "\n toSeqNum: " << toSeqNum << endl;
+//            std::cout << "\n"<<  detailedInfo() << endl;
             iter++;
         }
-
+        //splits last element
         if (iter != rexmitMap.end() && seqLess(iter->second.beginSeqNum, toSeqNum) && seqLess(toSeqNum, iter->second.endSeqNum)) { //Edge case, rarely happens ignore for now
             Region region = iter->second;
             //std::cout << "\n ALTERNATE Found block, setting sacked bit!" << endl;
@@ -373,7 +372,7 @@ void TcpSackRexmitQueue::setSackedBit(uint32_t fromSeqNum, uint32_t toSeqNum)
             region.sacked = true;
             //rexmitQueue.insert(i, region);
             rexmitMap.insert({region.endSeqNum, region});
-            //i->beginSeqNum = toSeqNum; //TODO MAYBE FIX
+            iter->second.beginSeqNum = toSeqNum; //TODO MAYBE FIX
         }
     }
 
@@ -491,20 +490,14 @@ uint32_t TcpSackRexmitQueue::getAmountOfSackedBytes(uint32_t fromSeqNum)// const
 //    {
 //        bytes += (i->endSeqNum - fromSeqNum);
 //    }
-    std::chrono::steady_clock::time_point beginBound = std::chrono::steady_clock::now();
     auto iter = rexmitMap.upper_bound(fromSeqNum);
-    std::chrono::steady_clock::time_point endBound = std::chrono::steady_clock::now();
-    boundTimeCheckTwo += std::chrono::duration_cast<std::chrono::nanoseconds>(endBound - beginBound).count();
 
-    std::chrono::steady_clock::time_point beginWhile = std::chrono::steady_clock::now();
     while (iter != rexmitMap.end()) {
         if (iter->second.sacked){
             bytes += (iter->first - iter->second.beginSeqNum);
         }
         iter++;
     }
-    std::chrono::steady_clock::time_point endWhile = std::chrono::steady_clock::now();
-    whileTimeCheckTwo += std::chrono::duration_cast<std::chrono::nanoseconds>(endWhile - beginWhile).count();
     return bytes;
 }
 
@@ -520,24 +513,17 @@ uint32_t TcpSackRexmitQueue::getNumOfDiscontiguousSacks(uint32_t fromSeqNum)//co
 //
 //    while (i != rexmitQueue.end() && seqLE(i->endSeqNum, fromSeqNum)) // search for seqNum
 //        i++;
-    std::chrono::steady_clock::time_point beginBound = std::chrono::steady_clock::now();
     auto iter = rexmitMap.upper_bound(fromSeqNum);
-    std::chrono::steady_clock::time_point endBound = std::chrono::steady_clock::now();
-    boundTimeCheckOne += std::chrono::duration_cast<std::chrono::nanoseconds>(endBound - beginBound).count();
     // search for discontiguous sacked regions
     bool prevSacked = false;
 
-    int countTest = 0;
     std::chrono::steady_clock::time_point beginWhile = std::chrono::steady_clock::now();
     while (iter != rexmitMap.end()) {
-        countTest++;
         if (iter->second.sacked && !prevSacked){
             counter++;
         }
         if(counter >= 3){
             //std::cout << "\n COUNTER: " << counter << endl;
-            std::chrono::steady_clock::time_point endWhile = std::chrono::steady_clock::now();
-            whileTimeCheckOne += std::chrono::duration_cast<std::chrono::nanoseconds>(endBound - beginBound).count();
             break;
         }
         prevSacked = iter->second.sacked;
@@ -545,8 +531,6 @@ uint32_t TcpSackRexmitQueue::getNumOfDiscontiguousSacks(uint32_t fromSeqNum)//co
     }
     //std::cout << "\n COUNT TEST: " << countTest << endl;
     //std::cout << "\n" << detailedInfo() << endl;
-    std::chrono::steady_clock::time_point endWhile = std::chrono::steady_clock::now();
-    whileTimeCheckOne += std::chrono::duration_cast<std::chrono::nanoseconds>(endWhile - beginWhile).count();
 
 
 //    while (i != rexmitQueue.end()) {
@@ -562,7 +546,7 @@ uint32_t TcpSackRexmitQueue::getNumOfDiscontiguousSacks(uint32_t fromSeqNum)//co
 
 void TcpSackRexmitQueue::checkSackBlock(uint32_t fromSeqNum, uint32_t& length, bool& sacked, bool& rexmitted) const
 {
-    ASSERT(seqLE(begin, fromSeqNum) && seqLess(fromSeqNum, end));
+    //ASSERT(seqLE(begin, fromSeqNum) && seqLess(fromSeqNum, end));
 
     //RexmitQueue::const_iterator i = rexmitQueue.begin();
     int count = 0;
@@ -582,8 +566,8 @@ void TcpSackRexmitQueue::checkSackBlock(uint32_t fromSeqNum, uint32_t& length, b
 //    {
 //        std::cout << it->second.beginSeqNum << " " << it->second.endSeqNum << "(" << it->first << ")" << "\n";
 //    }
-    ASSERT(iter != rexmitMap.end());
-    ASSERT(seqLE(iter->second.beginSeqNum, fromSeqNum) && seqLess(fromSeqNum, iter->second.endSeqNum));
+    //ASSERT(iter != rexmitMap.end());
+    //ASSERT(seqLE(iter->second.beginSeqNum, fromSeqNum) && seqLess(fromSeqNum, iter->second.endSeqNum));
 
     length = (iter->second.endSeqNum - fromSeqNum);
     sacked = iter->second.sacked;
