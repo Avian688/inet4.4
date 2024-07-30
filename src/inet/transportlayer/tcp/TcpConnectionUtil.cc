@@ -436,7 +436,7 @@ void TcpConnection::initConnection(TcpOpenCommand *openCmd)
 void TcpConnection::configureStateVariables()
 {
     state->max_burst = tcpMain->par("max_burst");
-    state->enableMaxBurst = tcpMain->par("enableMaxBurst");
+    state->enableMaxBurst = false;
     state->dupthresh = tcpMain->par("dupthresh");
     long advertisedWindowPar = tcpMain->par("advertisedWindow");
     state->ws_support = tcpMain->par("windowScalingSupport"); // if set, this means that current host supports WS (RFC 1323)

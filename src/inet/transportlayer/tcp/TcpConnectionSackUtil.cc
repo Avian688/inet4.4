@@ -208,7 +208,6 @@ void TcpConnection::setPipe() {
                 state->pipe += length;
         }
     }
-
     emit(pipeSignal, state->pipe);
 }
 
@@ -230,8 +229,8 @@ bool TcpConnection::nextSeg(uint32_t &seqNum) {
 
     seqNum = 0;
 
-    if (state->ts_enabled)
-        shift -= B(TCP_OPTION_TS_SIZE).get();
+    //if (state->ts_enabled)
+    //    shift -= B(TCP_OPTION_TS_SIZE).get();
 
     // RFC 3517, page 5: "(1) If there exists a smallest unSACKed sequence number 'S2' that
     // meets the following three criteria for determining loss, the
@@ -344,7 +343,7 @@ void TcpConnection::sendDataDuringLossRecoveryPhase(uint32_t congestionWindow) {
     if(state->enableMaxBurst){
         uint32_t segmentsSent = 0;
         while (((int)(congestionWindow / state->snd_mss)
-                - (int)(state->pipe / (state->snd_mss - 12))) >= 1
+                - (int)(state->pipe / (state->snd_mss))) >= 1
                 && ((state->max_burst - segmentsSent) > 0)) { // Note: Typecast needed to avoid prohibited transmissions
             // RFC 3517 pages 7 and 8: "(C.1) The scoreboard MUST be queried via NextSeg () for the
             // sequence number range of the next segment to transmit (if any),
@@ -354,8 +353,9 @@ void TcpConnection::sendDataDuringLossRecoveryPhase(uint32_t congestionWindow) {
 
             uint32_t seqNum;
 
-            if (!nextSeg(seqNum)) // if nextSeg() returns false (=failure): terminate steps C.1 -- C.5
+            if (!nextSeg(seqNum)){ // if nextSeg() returns false (=failure): terminate steps C.1 -- C.5
                 break;
+            }
 
             uint32_t sentBytes = sendSegmentDuringLossRecoveryPhase(seqNum);
             // RFC 3517 page 8: "(C.4) The estimate of the amount of data outstanding in the
